@@ -8,7 +8,7 @@ ResultView.message = {
     No_Result: '검색결과가 없습니다'
 }
 
-ResultView.setup = function (el) {
+ResultView.setup = function(el) {
     this.init(el) // el를 주입받아서 내부 속성을 가지고 있음
 }
 
@@ -18,14 +18,14 @@ ResultView.render = function(data = []) {
     this.show()
 }
 
-ResultView.getSearchResultHtml = function (data) {
+ResultView.getSearchResultHtml = function(data) {
     return data.reduce((html, item) => {
         html += this.getSearchItemtHtml(item)
         return html
     }, '<ul>') + '</ul>'
 }
 
-ResultView.getSearchItemtHtml = function (item) {
+ResultView.getSearchItemtHtml = function(item) {
     return `<li>
         <img src="${item.image}">
         <p>${item.name}</p>    
