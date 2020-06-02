@@ -21,14 +21,14 @@ export default {
 
     KeywordView.setup(document.querySelector('#search-keyword'))
       .on('@click', e => this.onClickKeyword(e.detail.keyword))
-      .on('@remove', e => this.onRemoveHistory(e.detail.keyword))
 
     HistoryView.setup(document.querySelector('#search-history'))
       .on('@click', e => this.onClickHistory(e.detail.keyword))
+      .on('@remove', e => this.onRemoveHistory(e.detail.keyword))
 
     ResultView.setup(document.querySelector('#search-result'))
 
-    this.selectedTab = '최근 검색어'
+    this.selectedTab = '추천 검색어'
     this.renderView()
   },
 
@@ -55,13 +55,13 @@ export default {
 
   fetchSearchHistory() {
     HistoryModel.list().then(data => {
-      HistoryView.render(data).onRemoveHistory() 
-      // render를 해서 DOM이 생성된 후, chaining을 하면 this return해주기
+      HistoryView.render(data).bindRemoveBtn()
     })
   },
 
   search(query) {
     FormView.setValue(query)
+    HistoryModel.add(query)
     SearchModel.list(query).then(data => {
       this.onSearchResult(data)
     })
@@ -85,7 +85,8 @@ export default {
   },
 
   onChangeTab(tabName) {
-    debugger
+    this.selectedTab = tabName
+    this.renderView()
   },
 
   onClickKeyword(keyword) {
