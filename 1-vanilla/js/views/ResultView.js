@@ -1,35 +1,35 @@
 import View from './View.js'
 
-const tag = '[ResultView]' // debugging을 위한 태그 
+const tag = '[ResultView]'
 
 const ResultView = Object.create(View)
 
-ResultView.message = {
-    No_Result: '검색결과가 없습니다'
+ResultView.messages = {
+  NO_RESULT: '검색 결과가 없습니다'
 }
 
-ResultView.setup = function(el) {
-    this.init(el) // el를 주입받아서 내부 속성을 가지고 있음
+ResultView.setup = function (el) {
+  this.init(el)
 }
 
-ResultView.render = function(data = []) {
-    console.log(tag, "render()", data)
-    this.el.innerHTML = data.length ? this.getSearchResultHtml(data) : this.message.No_Result
-    this.show()
+ResultView.render = function (data = []) {
+  console.log(tag, 'render()', data)
+  this.el.innerHTML = data.length ? this.getSearchResultsHtml(data) : this.messages.NO_RESULT
+  this.show()
 }
 
-ResultView.getSearchResultHtml = function(data) {
-    return data.reduce((html, item) => {
-        html += this.getSearchItemtHtml(item)
-        return html
-    }, '<ul>') + '</ul>'
+ResultView.getSearchResultsHtml = function (data) {
+  return data.reduce((html, item) => {
+    html += this.getSearchItemHtml(item)
+    return html
+  }, '<ul>') + '</ul>'
 }
 
-ResultView.getSearchItemtHtml = function(item) {
-    return `<li>
-        <img src="${item.image}">
-        <p>${item.name}</p>    
-        </li>`
+ResultView.getSearchItemHtml = function (item) {
+  return `<li>
+    <img src="${item.image}" />
+    <p>${item.name}</p>
+  </li>`
 }
 
 export default ResultView

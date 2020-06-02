@@ -7,7 +7,7 @@ const FormView = Object.create(View)
 FormView.setup = function (el) {
   this.init(el)
   this.inputEl = el.querySelector('[type=text]')
-  this.resetEl = el.querySelector('[type=reset]')
+  this.resetEl = el.querySelector('[type=reset')
   this.showResetBtn(false)
   this.bindEvents()
   return this
@@ -28,13 +28,17 @@ FormView.onKeyup = function (e) {
   this.showResetBtn(this.inputEl.value.length)
   if (!this.inputEl.value.length) this.emit('@reset')
   if (e.keyCode !== enter) return
-  this.emit('@submit', { input: this.inputEl.value }) //enter
+  this.emit('@submit', { input: this.inputEl.value })
 }
 
 FormView.onClickReset = function () {
-  console.log("emit = ", this)
-  this.emit('@reset') //reset
+  this.emit('@reset')
   this.showResetBtn(false)
+}
+
+FormView.setValue = function(value = '') {
+  this.inputEl.value = value
+  this.showResetBtn(this.inputEl.value.length);
 }
 
 export default FormView
