@@ -1,36 +1,67 @@
 import SearchModel from './models/SearchModel.js'
+import KeywordModel from './models/KeywordModel.js'
+import HistoryModel from './models/HistoryModel.js'
 
-new Vue({ //파라미터로 오브젝트를 넣어줌 
-    el: '#app',
-    data: {
-        query: '', // 입력데이터를 받아 저장, 양방향 바인딩
-        submitted: false,
-        searchResult: []
+new Vue({
+  el: '#app',
+  data: {
+    query: '',
+    submitted: false,
+    tabs: ['추천 검색어', '최근 검색어'],
+    selectedTab: '', // 12~15번줄 
+    keywords: [],
+    history: [],
+    searchResult: []
+  },
+  // vue 인스턴스가 생성될때 호출되는 함수 created()
+  created() {
+    this.selectedTab = this.tabs[0]
+    this.fetchKeyword()
+    this.fetchHistory()
+  },
+  methods: {
+    onSubmit(e) {
+      this.search()
     },
-    methods: {
-        onSubmit(e) {
-            // e.prevetDefuault() 화면 갱신을 막아주기 (javascript에서) vue에서는 .prevent를 써준다
-            this.search()
-        },
-        onKeyup() {
-            if (!this.query.length) {
-                this.resetForm()
-            }
-        },
-        onReset() {
-            this.resetForm();
-            // todo 검색결과를 숨기는 로직
-        },
-        search() {
-            SearchModel.list().then(data => {
-                this.submitted = true
-                this.searchResult = data
-            })
-        },
-        resetForm() {
-            this.query = ''
-            // todo remove result
-            debugger
-        }
-    }
-})// vue 인스턴스 만들기
+    onKeyup(e) {
+      if (!this.query.length) this.resetForm()
+    },
+    onReset(e) {
+      this.resetForm()
+    },
+    onClickRemoveHistory(keyword) {
+       HistoryModel.remove(keyword);
+       this.fetchHistory()
+    },
+    onClickTab(tab) {
+      this.selectedTab = tab
+    },
+    onClickKeyword(keyword) {
+      this.query = keyword
+      this.search()  
+    },
+    fetchKeyword() {
+      KeywordModel.list().then(data => {
+        this.keywords = data
+      })
+    },
+    fetchHistory() {
+      HistoryModel.list().then(data => {
+        this.history = data
+      })
+    },
+    search() {
+      SearchModel.list().then(data => {
+        this.submitted = true
+        this.searchResult = data
+      })
+      HistoryModel.add(this.query)
+      this.fetchHistory(this.query)
+    },
+    resetForm() {
+      this.query = ''
+      this.submitted = false
+      this.searchResult = []
+    },
+  }
+})
